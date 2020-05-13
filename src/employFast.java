@@ -51,4 +51,10 @@ public class employFast {
     public void setUsrPwdList(ArrayList<String> usrPwdList) {
         this.usrPwdList = usrPwdList;
     }
+
+    public void start(){
+
+
+    }
+
 }
