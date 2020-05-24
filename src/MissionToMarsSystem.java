@@ -5,7 +5,7 @@ public class MissionToMarsSystem {
     private ArrayList<Candidate> listOfCandidates;
     private ArrayList<Criteria> listOfCriteria;
 
-    public MissionToMarsSystem(ArrayList listOfMissions, ArrayList listOfCandidates, ArrayList listOfCriteria) {
+    public MissionToMarsSystem(ArrayList<Mission> listOfMissions, ArrayList<Candidate> listOfCandidates, ArrayList<Criteria> listOfCriteria) {
         this.listOfMissions = listOfMissions;
         this.listOfCandidates = listOfCandidates;
         this.listOfCriteria = listOfCriteria;
