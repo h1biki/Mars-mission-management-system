@@ -1,12 +1,9 @@
-public class Validation
-{
-    public Validation()
-    {
+public class Validation {
+    public Validation() {
     }
 
 
-    public boolean stringIsBlank(String value)
-    {
+    public boolean stringIsBlank(String value) {
         boolean blank = true;
         if (value.trim().length() > 0)
             blank = false;
@@ -14,16 +11,14 @@ public class Validation
     }
 
 
-    public boolean stringLengthWithinRange(String value, int min, int max)
-    {
+    public boolean stringLengthWithinRange(String value, int min, int max) {
         boolean withinRange = false;
         if ((value.trim().length() >= min) && (value.trim().length() <= max))
             withinRange = true;
         return withinRange;
     }
 
-    public static boolean isNumeric(String str)
-    {
+    public static boolean isNumeric(String str) {
         for(int i = 0; i < str.length(); i++)
         {
             int chr = str.charAt(i);
@@ -35,8 +30,7 @@ public class Validation
         return true;
     }
 
-    public boolean hasBlank(String str)
-    {
+    public boolean hasBlank(String str) {
         if (str.contains(" "))
         {
             return true;

@@ -3,6 +3,7 @@ public class UserInterface {
         UserInterface ui = new UserInterface();
         ui.start();
     }
+
     public UserInterface() {
         }
 
