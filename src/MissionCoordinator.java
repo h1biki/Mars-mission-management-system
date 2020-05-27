@@ -1,9 +1,10 @@
-public class MissionCoordinator {
+public class MissionCoordinator extends Person {
     private int coordinatorId;
     private String coordinatorName;
     private String coordinatorContactInformation;
 
-    public MissionCoordinator(int coordinatorId, String coordinatorName, String coordinatorContactInformation) {
+    public MissionCoordinator(String userName, String userPassword,String userPermission, String contactInformation, int identificationNumber, int coordinatorId, String coordinatorName, String coordinatorContactInformation) {
+        super(userName, userPassword, userPermission, contactInformation);
         this.coordinatorId = coordinatorId;
         this.coordinatorName = coordinatorName;
         this.coordinatorContactInformation = coordinatorContactInformation;

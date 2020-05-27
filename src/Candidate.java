@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class Candidate {
+public class Candidate extends Person {
     private int identificationNumber;
     private String candidateName;
     private Date candidateDob;
@@ -17,7 +17,8 @@ public class Candidate {
     private String healthRecord;
     private String criminalRecord;
 
-    public Candidate(int identificationNumber, String candidateName, Date candidateDob, String candidateAddress, String candidateNationality, String candidateGender, String candidateAllergy, String candidateFoodpre, String candidateQualification, String candidateWorkExperience, String candidateOccupation, String candidateComputerSkill, String candidateLanguage, String healthRecord, String criminalRecord) {
+    public Candidate(String userName, String userPassword,String userPermission, String contactInformation, int identificationNumber, String candidateName, Date candidateDob, String candidateAddress, String candidateNationality, String candidateGender, String candidateAllergy, String candidateFoodpre, String candidateQualification, String candidateWorkExperience, String candidateOccupation, String candidateComputerSkill, String candidateLanguage, String healthRecord, String criminalRecord) {
+        super(userName, userPassword, userPermission, contactInformation);
         this.identificationNumber = identificationNumber;
         this.candidateName = candidateName;
         this.candidateDob = candidateDob;

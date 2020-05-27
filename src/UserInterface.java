@@ -1,6 +1,13 @@
+import java.util.HashMap;
+
 public class UserInterface {
+    private Input input = new Input();
+    private Mission mission = new Mission();
+    private Job job = new Job();
+
     public static void main(String[] args) {
         UserInterface ui = new UserInterface();
+
         ui.start();
     }
 
@@ -9,8 +16,10 @@ public class UserInterface {
     public void start() {
         Input input = new Input();
         String option = "";//select option from the main menu
+        String role = "";
 
-        while (option.equals("2")) {//main loop
+        //option = input.acceptStringInput("Please Choose Your Option: ");
+        do {//main loop
             System.out.println("");
             System.out.println("============================================");
             System.out.println("*   Welcome To The Mission to Mars System  *");
@@ -21,23 +30,182 @@ public class UserInterface {
             System.out.println("============================================");
             System.out.println("");
             option = input.acceptStringInput("Please Choose Your Option: ");
+            Administrator administratorTom = new Administrator("Tom","pwd123", "Administrator", "012345678", 1, "AdminTom");
+            HashMap<String, Person> personHashMap= new HashMap<>();
+            personHashMap.put("Tom", administratorTom);
             switch (option) {
                 case "1":
-                    displayLoginMenu();
+                    role = displayLoginMenu(personHashMap);
                     break;
                 case "2":
                     System.out.println("Good Bye!");
                     break;
             }
+
+            if (role.equals("Administrator")){
+                String action = "";
+                action = displayMissionCoordinatorMenu();
+                if (action.equals("1")){
+                    createMission();
+                }
+            }
+
+
+        }while (option.equals("2"));
+    }
+
+    public String displayLoginMenu(HashMap<String, Person> hashMap) {
+        String role = "";
+        String userName = input.acceptStringInput("Please enter your username");
+        String password = input.acceptStringInput("Please enter your password");
+        if (userName.equals(hashMap.get("Tom").getUserName()) && password.equals(hashMap.get("Tom").getUserPassword())) {
+            if (hashMap.get("Tom").getUserPermission().equals("Administrator")){
+                role = "Administrator";
+            } else if(hashMap.get("Tom").getUserPermission().equals("Candidate")){
+                role = "Candidate";
+            } else{
+                role = "MissionCoordinator";
+            }
         }
-    }
-
-    public void displayLoginMenu() {
+        return role;
 
     }
 
-    public void displayMissionCoordinatorMenu() {
+    public String displayMissionCoordinatorMenu() {
+        String option = "";
+        System.out.println("");
+        System.out.println("============================================");
+        System.out.println("*          Mission Coordinator Menu        *");
+        System.out.println("*                                          *");
+        System.out.println("* Please select from the following options *");
+        System.out.println("*            Press 1 to Creat a Mission    *");
+        System.out.println("*            Press 2 to exit               *");
+        System.out.println("============================================");
+        System.out.println("");
+        option = input.acceptStringInput("Please Choose Your Option: ");
+        return option;
+    }
 
+    public String displayCreateMissionMenu(){
+        String option= "";
+        System.out.println("");
+        System.out.println("========================================================");
+        System.out.println("*                Create Mission Menu                   *");
+        System.out.println("*                                                      *");
+        System.out.println("* Please select from the following options to create   *");
+        System.out.println("* or edit mission                                      *");
+        System.out.println("*  1. Mission name                                     *");
+        System.out.println("*  2. Mission description                              *");
+        System.out.println("*  3. Country of region                                *");
+        System.out.println("*  4. Countries allowed                                *");
+        System.out.println("*  5. Coordinator's name and contact information       *");
+        System.out.println("*  6. Jobs                                             *");
+        System.out.println("*  7. Employment requirements                          *");
+        System.out.println("*  8. Cargo requirements                               *");
+        System.out.println("*  9. Launch date                                      *");
+        System.out.println("*  10. Location of the destination                     *");
+        System.out.println("*  11. Duration of the mission                         *");
+        System.out.println("*  12. Status of the mission                           *");
+        System.out.println("*  13. Back to the Mission Coordinator Menu            *");
+        System.out.println("========================================================");
+        System.out.println("");
+        option = input.acceptStringInput("Please Choose Your Option: ");
+        return option;
+    }
+
+    public void createMission(){
+        String option = "";
+        do{
+            option = displayCreateMissionMenu();
+            option = displayCreateMission(option);
+        }while(!option.equals("13"));
+    }
+
+    public String displayCreateMission (String option){
+        switch (option){
+            case "1":
+                String name = input.acceptStringInput("Please enter the mission name.");
+                mission.setMissionName(name);
+                break;
+            case "2":
+                String descrption = input.acceptStringInput("Please enter the mission description.");
+                mission.setMissionDescription(descrption);
+                break;
+            case "3":
+                String countryOfRegion = input.acceptStringInput("Please enter the country of region.");
+                mission.setCountryOfOrigin(countryOfRegion);
+                break;
+            case "4":
+                String countriesAllowed = input.acceptStringInput("Please enter the countries allowed.");
+                mission.setCountryAllowed(countriesAllowed);
+                break;
+            case "5":
+                String coordinateInformation = input.acceptStringInput("Please enter the coordinator's name and contact information.");
+                mission.setCoordinateInformation(coordinateInformation);
+                break;
+            case "6":
+                String jobName = input.acceptStringInput("Please enter the job name.");
+                job.setJobName(jobName);
+                String jobDescription = input.acceptStringInput("Please enter the job description.");
+                job.setJobDescription(jobDescription);
+                break;
+            case "7":
+                String title = input.acceptStringInput("Please enter the employment requirements title.");
+                mission.setEmploymentRequirement(title);
+                int noOfEmp = input.acceptIntegerInput("Please enter the number of employees requirements for each job.");
+                mission.setNumberOfEmploymentRequirement(noOfEmp);
+                break;
+            case "8":
+                String cargoReqForJourney = input.acceptStringInput("Please enter the cargo requirements for the journey.");
+                mission.setCargoRequirementForJourney(cargoReqForJourney);
+                String cargoReqForMission = input.acceptStringInput("Please enter the cargo requirements for the mission.");
+                mission.setCargoRequirementForMission(cargoReqForMission);
+                String cargoReqForOtherMission = input.acceptStringInput("Please enter the cargo requirements for other mission.");
+                mission.setCargoRequirementForOtherMission(cargoReqForOtherMission);
+                break;
+            case "9":
+                String LaunchDate = input.acceptStringInput("Please enter the launch date.");
+                mission.setLaunchDate(LaunchDate);
+                break;
+            case "10":
+                String desLocation = input.acceptStringInput("Please enter the Location of the destination.");
+                mission.setDestinationLocation(desLocation);
+                break;
+            case "11":
+                int missionDuration = input.acceptIntegerInput("Please enter the Duration of the mission.");
+                mission.setMissionDuration(missionDuration);
+                break;
+            case "12":
+                String choice = input.acceptStringInput("Please select the state of the mission.\n\na.Planning phase \nb.Departed Earth\nc.Landed on Mars\nd.Mission in progress\ne. Returned to Earth\nf. Mission completed");
+                String state = missionState(choice);
+                mission.setMissionStatus(state);
+                break;
+        }
+        return option;
+    }
+
+    public String missionState(String option){
+        String state = "Planning phase";
+        switch (option){
+            case "a":
+                break;
+            case "b":
+                state = "Departed Earth";
+                break;
+            case "c":
+                state = "Landed on Mars";
+                break;
+            case "d":
+                state = "Mission in progress";
+                break;
+            case "e":
+                state = "Returned to Earth";
+                break;
+            case "f":
+                state = "Mission completed";
+                break;
+        }
+        return state;
     }
 
     public void displayAdministratorMenu() {

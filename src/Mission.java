@@ -5,6 +5,7 @@ public class Mission {
     private String missionName;
     private String missionDescription;
     private String countryOfOrigin;
+    private String coordinateInformation;
     private String countryAllowed;
     private String launchDate;
     private String destinationLocation;
@@ -12,13 +13,21 @@ public class Mission {
     private String missionStatus;
     private ArrayList<Job> listOfJob;
     private String employmentRequirement;
-    private String cargoRequirement;
+    private int numberOfEmploymentRequirement;
+    private String cargoRequirementForJourney;
+    private String cargoRequirementForMission;
+    private String cargoRequirementForOtherMission;
+    private Shuttle shuttle;
 
-    public Mission(int missionId, String missionName, String missionDescription, String countryOfOrigin, String countryAllowed, String launchDate, String destinationLocation, int missionDuration, String missionStatus, ArrayList<Job> listOfJob, String employmentRequirement, String cargoRequirement) {
+    public Mission() {
+    }
+
+    public Mission(int missionId, String missionName, String missionDescription, String countryOfOrigin, String coordinateInformation, String countryAllowed, String launchDate, String destinationLocation, int missionDuration, String missionStatus, ArrayList<Job> listOfJob, String employmentRequirement, int numberOfEmploymentRequirement, String cargoRequirementForJourney) {
         this.missionId = missionId;
         this.missionName = missionName;
         this.missionDescription = missionDescription;
         this.countryOfOrigin = countryOfOrigin;
+        this.coordinateInformation = coordinateInformation;
         this.countryAllowed = countryAllowed;
         this.launchDate = launchDate;
         this.destinationLocation = destinationLocation;
@@ -26,7 +35,8 @@ public class Mission {
         this.missionStatus = missionStatus;
         this.listOfJob = listOfJob;
         this.employmentRequirement = employmentRequirement;
-        this.cargoRequirement = cargoRequirement;
+        this.numberOfEmploymentRequirement = numberOfEmploymentRequirement;
+        this.cargoRequirementForJourney = cargoRequirementForJourney;
     }
 
     public int getMissionId() {
@@ -59,6 +69,14 @@ public class Mission {
 
     public void setCountryOfOrigin(String countryOfOrigin) {
         this.countryOfOrigin = countryOfOrigin;
+    }
+
+    public String getCoordinateInformation() {
+        return coordinateInformation;
+    }
+
+    public void setCoordinateInformation(String coordinateInformation) {
+        this.coordinateInformation = coordinateInformation;
     }
 
     public String getCountryAllowed() {
@@ -117,14 +135,43 @@ public class Mission {
         this.employmentRequirement = employmentRequirement;
     }
 
-    public String getCargoRequirement() {
-        return cargoRequirement;
+    public int getNumberOfEmploymentRequirement() {
+        return numberOfEmploymentRequirement;
     }
 
-    public void setCargoRequirement(String cargoRequirement) {
-        this.cargoRequirement = cargoRequirement;
+    public void setNumberOfEmploymentRequirement(int numberOfEmploymentRequirement) {
+        this.numberOfEmploymentRequirement = numberOfEmploymentRequirement;
     }
 
+    public String getCargoRequirementForJourney() {
+        return cargoRequirementForJourney;
+    }
 
+    public void setCargoRequirementForJourney(String cargoRequirementForJourney) {
+        this.cargoRequirementForJourney = cargoRequirementForJourney;
+    }
 
+    public String getCargoRequirementForMission() {
+        return cargoRequirementForMission;
+    }
+
+    public void setCargoRequirementForMission(String cargoRequirementForMission) {
+        this.cargoRequirementForMission = cargoRequirementForMission;
+    }
+
+    public String getCargoRequirementForOtherMission() {
+        return cargoRequirementForOtherMission;
+    }
+
+    public void setCargoRequirementForOtherMission(String cargoRequirementForOtherMission) {
+        this.cargoRequirementForOtherMission = cargoRequirementForOtherMission;
+    }
+
+    public Shuttle getShuttle() {
+        return shuttle;
+    }
+
+    public void setShuttle(Shuttle shuttle) {
+        this.shuttle = shuttle;
+    }
 }

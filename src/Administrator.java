@@ -1,8 +1,9 @@
-public class Administrator {
+public class Administrator extends Person {
     private int adminId;
     private String adminName;
 
-    public Administrator(int adminId, String adminName) {
+    public Administrator (String userName, String userPassword,String userPermission, String contactInformation, int adminId, String adminName) {
+        super(userName, userPassword, userPermission, contactInformation);
         this.adminId = adminId;
         this.adminName = adminName;
     }

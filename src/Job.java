@@ -5,6 +5,10 @@ public class Job {
     private int jobEmploymentNumber;
     private String jobRequirement;
 
+    public Job(){
+
+    }
+
     public Job(int jobId, String jobName, String jobDescription, int jobEmploymentNumber, String jobRequirement) {
         this.jobId = jobId;
         this.jobName = jobName;

@@ -35,11 +35,11 @@ public class MissionToMarsSystem {
         this.listOfMissions = listOfMissions;
     }
 
-    public Mission createMission() {
+    /*public Mission createMission() {
 
     }
 
-    public Mission editMission() {
+    /*public Mission editMission() {
 
     }
 
@@ -65,7 +65,7 @@ public class MissionToMarsSystem {
 
     public int findShuttle(ArrayList<Integer> arrayList) {
 
-    }
+    }*/
 
 
 

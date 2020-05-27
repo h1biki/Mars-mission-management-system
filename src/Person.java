@@ -11,6 +11,10 @@ public class Person {
         this.contactInformation = contactInformation;
     }
 
+    public Person() {
+
+    }
+
     public String getUserName() {
         return userName;
     }
