@@ -1,4 +1,8 @@
+import com.sun.java.accessibility.util.EventID;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class UserInterface {
     private Input input = new Input();
@@ -7,7 +11,6 @@ public class UserInterface {
 
     public static void main(String[] args) {
         UserInterface ui = new UserInterface();
-
         ui.start();
     }
 
@@ -18,7 +21,6 @@ public class UserInterface {
         String option = "";//select option from the main menu
         String role = "";
 
-        //option = input.acceptStringInput("Please Choose Your Option: ");
         do {//main loop
             System.out.println("");
             System.out.println("============================================");
@@ -30,9 +32,20 @@ public class UserInterface {
             System.out.println("============================================");
             System.out.println("");
             option = input.acceptStringInput("Please Choose Your Option: ");
-            Administrator administratorTom = new Administrator("Tom","pwd123", "Administrator", "012345678", 1, "AdminTom");
+            Administrator administratorTom = new Administrator("Tom","pwd123", "Administrator", "tom@gmail.com", 1, "AdminTom");
+            MissionCoordinator missionCoordinatorJerry = new MissionCoordinator("Jerry", "pwd123", "MissionCoordinator", "jerry@gmail.com", 1, 1, "MCJerry", "jerry@gmail.com");
+            Shuttle shuttle1 = new Shuttle(1, "shuttle1", 1999, 1000.00, 5, 100.00, 3000.00);
+            Shuttle shuttle2 = new Shuttle(2, "shuttle2", 2000, 1500.00, 6, 150.00, 3000.00);
+
+            HashMap<String, Shuttle> shuttleHashMap = new HashMap<>();
+            shuttleHashMap.put("shuttle1", shuttle1);
+            shuttleHashMap.put("shuttle2", shuttle2);
+
             HashMap<String, Person> personHashMap= new HashMap<>();
             personHashMap.put("Tom", administratorTom);
+            personHashMap.put("Jerry", missionCoordinatorJerry);
+
+
             switch (option) {
                 case "1":
                     role = displayLoginMenu(personHashMap);
@@ -42,16 +55,64 @@ public class UserInterface {
                     break;
             }
 
-            if (role.equals("Administrator")){
-                String action = "";
-                action = displayMissionCoordinatorMenu();
-                if (action.equals("1")){
-                    createMission();
+            String action = "";
+            do {
+                if (role.equals("MissionCoordinator")) {
+                    action = displayMissionCoordinatorMenu();
+                    if (action.equals("1")) {
+                        createMission();
+                    }
+                } else if (role.equals("Administrator")) {
+                    action = displayAdministratorMenu();
+                    if (action.equals("1")) {
+                        editMission();
+                    } else if(action.equals("2")) {
+                        selectShuttle(shuttleHashMap);
+                    }
+                } else if (role.equals("Candidate")) {
                 }
+            } while (!action.equals("e"));
+        }while (!option.equals("2"));
+    }
+
+    private void selectShuttle(HashMap<String, Shuttle> shuttleHashMap) {
+        System.out.println("Available Shuttles");
+        System.out.println("============================================");
+        System.out.println("Shuttle1:");
+        System.out.println("Shuttle Name: " + shuttleHashMap.get("Shuttle1").getShuttleName());
+        System.out.println("ID: " + shuttleHashMap.get("Shuttle1").getShuttleId());
+        System.out.println("Cargo Capacity: " + shuttleHashMap.get("Shuttle1").getCargoCapacity());
+        System.out.println("Fuel Capacity: " + shuttleHashMap.get("Shuttle1").getFuelCapacity());
+        System.out.println("Manufacturing Year: " + shuttleHashMap.get("Shuttle1").getManufacturingYear());
+        System.out.println("Passenger Capacity: " + shuttleHashMap.get("Shuttle1").getPassengerCapacity());
+        System.out.println("Travel Speed: " + shuttleHashMap.get("Shuttle1").getTravelSpeed());
+        System.out.println("============================================");
+        System.out.println("Shuttle2:");
+        System.out.println("Shuttle Name: " + shuttleHashMap.get("Shuttle2").getShuttleName());
+        System.out.println("ID: " + shuttleHashMap.get("Shuttle2").getShuttleId());
+        System.out.println("Cargo Capacity: " + shuttleHashMap.get("Shuttle2").getCargoCapacity());
+        System.out.println("Fuel Capacity: " + shuttleHashMap.get("Shuttle2").getFuelCapacity());
+        System.out.println("Manufacturing Year: " + shuttleHashMap.get("Shuttle2").getManufacturingYear());
+        System.out.println("Passenger Capacity: " + shuttleHashMap.get("Shuttle2").getPassengerCapacity());
+        System.out.println("Travel Speed: " + shuttleHashMap.get("Shuttle2").getTravelSpeed());
+        System.out.println("============================================");
+        String option = input.acceptStringInput("Please input the desired shuttle name for mission:(Case sensitive)");
+
+        Iterator keys = shuttleHashMap.keySet().iterator();
+        while(keys.hasNext()){
+            String key = (String)keys.next();
+            if(option.equals(key)){
+                mission.setShuttle(shuttleHashMap.get(key));
             }
+        }
+    }
 
-
-        }while (option.equals("2"));
+    private void editMission() {
+        String option = "";
+        do{
+            option = displayCreateMissionMenu();
+            option = displayCreateMission(option);
+        }while(!option.equals("13"));
     }
 
     public String displayLoginMenu(HashMap<String, Person> hashMap) {
@@ -79,7 +140,7 @@ public class UserInterface {
         System.out.println("*                                          *");
         System.out.println("* Please select from the following options *");
         System.out.println("*            Press 1 to Creat a Mission    *");
-        System.out.println("*            Press 2 to exit               *");
+        System.out.println("*            Press e to exit               *");
         System.out.println("============================================");
         System.out.println("");
         option = input.acceptStringInput("Please Choose Your Option: ");
@@ -87,7 +148,7 @@ public class UserInterface {
     }
 
     public String displayCreateMissionMenu(){
-        String option= "";
+        String option = "";
         System.out.println("");
         System.out.println("========================================================");
         System.out.println("*                Create Mission Menu                   *");
@@ -109,9 +170,10 @@ public class UserInterface {
         System.out.println("*  13. Back to the Mission Coordinator Menu            *");
         System.out.println("========================================================");
         System.out.println("");
-        option = input.acceptStringInput("Please Choose Your Option: ");
+        option = input.acceptStringInput("Select from the options: ");
         return option;
     }
+
 
     public void createMission(){
         String option = "";
@@ -208,7 +270,20 @@ public class UserInterface {
         return state;
     }
 
-    public void displayAdministratorMenu() {
+    public String displayAdministratorMenu() {
+        String option = "";
+        System.out.println("");
+        System.out.println("============================================");
+        System.out.println("*            Administrator Menu            *");
+        System.out.println("*                                          *");
+        System.out.println("* Please select from the following options *");
+        System.out.println("*         Press 1 to Edit a Mission        *");
+        System.out.println("*         Press 2 to Select Shuttle        *");
+        System.out.println("*            Press e to exit               *");
+        System.out.println("============================================");
+        System.out.println("");
+        option = input.acceptStringInput("Please Choose Your Option: ");
+        return option;
 
     }
 
