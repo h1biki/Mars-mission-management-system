@@ -1,8 +1,14 @@
 import com.sun.java.accessibility.util.EventID;
 
+import javax.swing.text.StyledEditorKit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
+import java.io.*;
+import java.io.FileWriter;
+
+import static java.lang.Integer.*;
 
 public class UserInterface {
     private Input input = new Input();
@@ -16,6 +22,7 @@ public class UserInterface {
 
     public UserInterface() {
     }
+
     public void start() {
         Input input = new Input();
         String option = "";//select option from the main menu
@@ -32,7 +39,7 @@ public class UserInterface {
             System.out.println("============================================");
             System.out.println("");
             option = input.acceptStringInput("Please Choose Your Option: ");
-            Administrator administratorTom = new Administrator("Tom","pwd123", "Administrator", "tom@gmail.com", 1, "AdminTom");
+            Administrator administratorTom = new Administrator("Tom", "pwd123", "Administrator", "tom@gmail.com", 1, "AdminTom");
             MissionCoordinator missionCoordinatorJerry = new MissionCoordinator("Jerry", "pwd123", "MissionCoordinator", "jerry@gmail.com", 1, 1, "MCJerry", "jerry@gmail.com");
             Shuttle shuttle1 = new Shuttle(1, "shuttle1", 1999, 1000.00, 5, 100.00, 3000.00);
             Shuttle shuttle2 = new Shuttle(2, "shuttle2", 2000, 1500.00, 6, 150.00, 3000.00);
@@ -41,7 +48,7 @@ public class UserInterface {
             shuttleHashMap.put("shuttle1", shuttle1);
             shuttleHashMap.put("shuttle2", shuttle2);
 
-            HashMap<String, Person> personHashMap= new HashMap<>();
+            HashMap<String, Person> personHashMap = new HashMap<>();
             personHashMap.put("Tom", administratorTom);
             personHashMap.put("Jerry", missionCoordinatorJerry);
 
@@ -66,13 +73,14 @@ public class UserInterface {
                     action = displayAdministratorMenu();
                     if (action.equals("1")) {
                         editMission();
-                    } else if(action.equals("2")) {
+                    } else if (action.equals("2")) {
                         selectShuttle(shuttleHashMap);
+                        displayCriteria();
                     }
                 } else if (role.equals("Candidate")) {
                 }
             } while (!action.equals("e"));
-        }while (!option.equals("2"));
+        } while (!option.equals("2"));
     }
 
     private void selectShuttle(HashMap<String, Shuttle> shuttleHashMap) {
@@ -99,9 +107,9 @@ public class UserInterface {
         String option = input.acceptStringInput("Please input the desired shuttle name for mission:(Case sensitive)");
 
         Iterator keys = shuttleHashMap.keySet().iterator();
-        while(keys.hasNext()){
-            String key = (String)keys.next();
-            if(option.equals(key)){
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (option.equals(key)) {
                 mission.setShuttle(shuttleHashMap.get(key));
             }
         }
@@ -109,10 +117,10 @@ public class UserInterface {
 
     private void editMission() {
         String option = "";
-        do{
+        do {
             option = displayCreateMissionMenu();
             option = displayCreateMission(option);
-        }while(!option.equals("13"));
+        } while (!option.equals("13"));
     }
 
     public String displayLoginMenu(HashMap<String, Person> hashMap) {
@@ -120,11 +128,11 @@ public class UserInterface {
         String userName = input.acceptStringInput("Please enter your username");
         String password = input.acceptStringInput("Please enter your password");
         if (userName.equals(hashMap.get("Tom").getUserName()) && password.equals(hashMap.get("Tom").getUserPassword())) {
-            if (hashMap.get("Tom").getUserPermission().equals("Administrator")){
+            if (hashMap.get("Tom").getUserPermission().equals("Administrator")) {
                 role = "Administrator";
-            } else if(hashMap.get("Tom").getUserPermission().equals("Candidate")){
+            } else if (hashMap.get("Tom").getUserPermission().equals("Candidate")) {
                 role = "Candidate";
-            } else{
+            } else {
                 role = "MissionCoordinator";
             }
         }
@@ -147,7 +155,7 @@ public class UserInterface {
         return option;
     }
 
-    public String displayCreateMissionMenu(){
+    public String displayCreateMissionMenu() {
         String option = "";
         System.out.println("");
         System.out.println("========================================================");
@@ -175,16 +183,16 @@ public class UserInterface {
     }
 
 
-    public void createMission(){
+    public void createMission() {
         String option = "";
-        do{
+        do {
             option = displayCreateMissionMenu();
             option = displayCreateMission(option);
-        }while(!option.equals("13"));
+        } while (!option.equals("13"));
     }
 
-    public String displayCreateMission (String option){
-        switch (option){
+    public String displayCreateMission(String option) {
+        switch (option) {
             case "1":
                 String name = input.acceptStringInput("Please enter the mission name.");
                 mission.setMissionName(name);
@@ -246,9 +254,9 @@ public class UserInterface {
         return option;
     }
 
-    public String missionState(String option){
+    public String missionState(String option) {
         String state = "Planning phase";
-        switch (option){
+        switch (option) {
             case "a":
                 break;
             case "b":
@@ -292,8 +300,75 @@ public class UserInterface {
     }
 
     public void displayCriteria() {
+        System.out.println("============================================");
+        System.out.println("Now, you should create specific criteria. \n There are three criteria. \n The first one is criminal record. " +
+                "\n The second one is health record. \n The last one is age range. \n The criteria will be stored to the system after you create.");
+        System.out.println("============================================");
+        String criteriaCriminal = input.acceptStringInput("Please create the criteria for criminal record ");
+        String healthRecord = input.acceptStringInput("Please create the criteria for health record: ");
+        String max = "";
+        String min = "";
+        max = input.acceptStringInput("please type the maximum age ");
+        min = input.acceptStringInput("please type the minimum age ");
+        boolean flag = true;
+
+        boolean flagmin = false;
+        boolean flagmax = false;
+        Scanner sc = new Scanner(String.valueOf(max));
+        Scanner sc2 = new Scanner(String.valueOf(min));
+        while (flag) {
+            while (!sc.hasNextInt() || flagmax) {
+                if (!flagmax)
+                    System.out.println("Maximum age is not Integer");
+                max = input.acceptStringInput("please type the maximum age ");
+                sc = new Scanner(String.valueOf(max));
+                flagmax = false;
+            }
+
+            while (!sc2.hasNextInt() || flagmin) {
+                if (!flagmin)
+                    System.out.println("Minimum age is not Integer");
+                min = input.acceptStringInput("please type the minimum age ");
+                sc2 = new Scanner(String.valueOf(min));
+                flagmin = false;
+            }
+
+
+                int max1 = Integer.parseInt(max);
+            int min1 = Integer.parseInt(min);
+                if (max1 <= 0 || max1 >= 100) {
+                    System.out.println("The maximum age is greater or equal to 100 please type again");
+                    flagmax = true;
+                }
+                else if (min1 <= 0) {
+                    System.out.println("The minimum age is less or equal to 0, please type again");
+                    flagmin = true;
+                }
+                else if (max1 < min1) {
+                    System.out.println("The minimum age is greater than maximum age,please type again");
+                    flagmin = true;
+                    flagmax = true;
+                } else {
+                    flag = false;
+                    System.out.println("The criteria have been created successfully.");
+                    File criteria = new File("~/Desktops/criteria.txt");
+                    try{
+                        FileWriter writer = new FileWriter("criteria.txt");
+                        writer.write(criteriaCriminal);
+                        writer.write(healthRecord);
+                        writer.write(max);
+                        writer.write(min);
+                    }catch(IOException e) {
+                        System.out.println("An error occurred");
+                    }
+                    }
+                }
+
+        }
+    public void writeCriteria() {
 
     }
+
 
     public void displayNBestCandidates() {
 
