@@ -301,8 +301,11 @@ public class UserInterface {
 
     public void displayCriteria() {
         System.out.println("============================================");
-        System.out.println("Now, you should create specific criteria. \n There are three criteria. \n The first one is criminal record. " +
-                "\n The second one is health record. \n The last one is age range. \n The criteria will be stored to the system after you create.");
+        System.out.println("Now, you should create specific criteria. " +
+                "\n There are three criteria. \n The first one is criminal record. " +
+                "\n The second one is health record. " +
+                "\n The last one is age range. " +
+                "\n The criteria will be stored to the system after you create.");
         System.out.println("============================================");
         String criteriaCriminal = input.acceptStringInput("Please create the criteria for criminal record ");
         String healthRecord = input.acceptStringInput("Please create the criteria for health record: ");
