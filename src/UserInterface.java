@@ -1,19 +1,31 @@
 import com.sun.java.accessibility.util.EventID;
 
 import javax.swing.text.StyledEditorKit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 import java.io.FileWriter;
+import java.text.DateFormat;
 
+import java.text.SimpleDateFormat;
+
+import java.text.ParseException;
+
+import java.io.FileInputStream;
+/*
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+*/
 import static java.lang.Integer.*;
 
 public class UserInterface {
     private Input input = new Input();
     private Mission mission = new Mission();
     private Job job = new Job();
+    private Criteria criteria = new Criteria();
 
     public static void main(String[] args) {
         UserInterface ui = new UserInterface();
@@ -314,7 +326,6 @@ public class UserInterface {
         max = input.acceptStringInput("please type the maximum age ");
         min = input.acceptStringInput("please type the minimum age ");
         boolean flag = true;
-
         boolean flagmin = false;
         boolean flagmax = false;
         Scanner sc = new Scanner(String.valueOf(max));
@@ -337,43 +348,148 @@ public class UserInterface {
             }
 
 
-                int max1 = Integer.parseInt(max);
+            int max1 = Integer.parseInt(max);
             int min1 = Integer.parseInt(min);
-                if (max1 <= 0 || max1 >= 100) {
-                    System.out.println("The maximum age is greater or equal to 100 please type again");
-                    flagmax = true;
+            if (max1 <= 0 || max1 >= 100) {
+                System.out.println("The maximum age is greater or equal to 100 please type again");
+                flagmax = true;
+            } else if (min1 <= 0) {
+                System.out.println("The minimum age is less or equal to 0, please type again");
+                flagmin = true;
+            } else if (max1 < min1) {
+                System.out.println("The minimum age is greater than maximum age,please type again");
+                flagmin = true;
+                flagmax = true;
+            } else {
+                flag = false;
+                System.out.println("The criteria have been created successfully.");
+                File criteria = new File("~/Desktops/criteria.txt");
+                try {
+                    FileWriter writer = new FileWriter("criteria.txt");
+                    writer.write(criteriaCriminal);
+                    writer.write(healthRecord);
+                    writer.write(max);
+                    writer.write(min);
+                } catch (IOException e) {
+                    System.out.println("An error occurred");
                 }
-                else if (min1 <= 0) {
-                    System.out.println("The minimum age is less or equal to 0, please type again");
-                    flagmin = true;
-                }
-                else if (max1 < min1) {
-                    System.out.println("The minimum age is greater than maximum age,please type again");
-                    flagmin = true;
-                    flagmax = true;
-                } else {
-                    flag = false;
-                    System.out.println("The criteria have been created successfully.");
-                    File criteria = new File("~/Desktops/criteria.txt");
-                    try{
-                        FileWriter writer = new FileWriter("criteria.txt");
-                        writer.write(criteriaCriminal);
-                        writer.write(healthRecord);
-                        writer.write(max);
-                        writer.write(min);
-                    }catch(IOException e) {
-                        System.out.println("An error occurred");
-                    }
-                    }
-                }
-
+            }
         }
+        criteria.setAgeMax(Integer.parseInt(max));
+        criteria.setAgeMin(Integer.parseInt(min));
+        criteria.setCriminalRecord(criteriaCriminal);
+        criteria.setHealthRecord(healthRecord);
+    }
+
     public void writeCriteria() {
 
     }
 
 
     public void displayNBestCandidates() {
+        Input input = new Input();
+        String candiNo = "";
+        boolean flag = true;
+        while (flag) {
+            candiNo = input.acceptStringInput("please input the number of candidates you want:");
+            candiNo = candiNo.replaceAll("[0-9]", "");
+            if (candiNo.length() != 0) {
+                System.out.println("the input value is not an integer");
+            } else {
+                flag = false;
+            }
+        }
+        String candiCriminalRecord = "";
+        while (!flag) {
+            candiCriminalRecord = input.acceptStringInput("please input the criminal record:");
+            if (criteria.getCriminalRecord().equals(candiCriminalRecord)) {
+                flag = true;
+            } else {
+                System.out.println("the criminal record does not exist ");
+            }
+        }
+        String candiHealthRecord = "";
+        while (flag) {
+            candiHealthRecord = input.acceptStringInput("please input the health record:");
+            if (criteria.getHealthRecord().equals(candiHealthRecord)) {
+                flag = false;
+            } else {
+                System.out.println("the health record does not exist ");
+            }
+        }
+
+        String candiDob = "";
+        int age = -1;
+        while (!flag) {
+            candiDob = input.acceptStringInput("please input the date of birth in format of 'yyyy-mm-dd'");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = format.parse(candiDob);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                System.out.println("Your input should be in format of yyyy-mm-dd");
+            }
+            if(date != null) {
+                date = java.sql.Date.valueOf(candiDob);
+                flag = true;
+            }
+            Date currentDate = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int yearOfBirth = c.get(Calendar.YEAR);
+            Calendar c1 = Calendar.getInstance();
+            c.setTime(currentDate);
+            int currentYear = c1.get(Calendar.YEAR);
+            age = currentYear - yearOfBirth;
+            if(age >= criteria.getAgeMin() && age <= criteria.getAgeMax()){
+                flag = true;
+            }
+            else{
+                System.out.println("the age does not exist");
+            }
+        }
+        for (int i = 0; i < Integer.parseInt(candiNo); i++) {
+            System.out.println("Here are the candidates you want:");
+            System.out.println("");
+        }
+
+    }
+
+    public String dateToString(Date date, String type) {
+        String str = null;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        if (type.equals("SHORT")) {
+            format = DateFormat.getDateInstance(DateFormat.SHORT);
+
+            str = format.format(date);
+        } else if (type.equals("MEDIUM")) {
+            format = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            str = format.format(date);
+        } else if (type.equals("FULL")) {
+            format = DateFormat.getDateInstance(DateFormat.FULL);
+            str = format.format(date);
+        }
+        return str;
+
+    }
+
+    public Date stringToDate(String str) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = format.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        date = java.sql.Date.valueOf(str);
+        return date;
+    }
+
+    public void readExcel() {
+        File file = new File("~/Desktops/sample missionToMars data.xlsx");
+        //BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+        //POIFSFileSystem p = new POIFSFileSystem(in);
 
     }
 
@@ -388,9 +504,6 @@ public class UserInterface {
     public void displayException(String string) {
 
     }
-
-
-
 
 
 }

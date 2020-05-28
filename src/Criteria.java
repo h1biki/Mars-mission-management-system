@@ -9,6 +9,7 @@ public class Criteria {
     private String computerSkill;
     private String language;
 
+    public Criteria() {}
     public Criteria(int criteriaId, int ageMax, int ageMin, int workExperienceYear, String occupation, String healthRecord, String criminalRecord, String computerSkill, String language) {
         this.criteriaId = criteriaId;
         this.ageMax = ageMax;
@@ -19,6 +20,13 @@ public class Criteria {
         this.criminalRecord = criminalRecord;
         this.computerSkill = computerSkill;
         this.language = language;
+    }
+
+    public Criteria(String crinimalRecord, String healthRecord, int ageMax, int ageMin){
+        this.criminalRecord = criminalRecord;
+        this.healthRecord = healthRecord;
+        this.ageMax = ageMax;
+        this.ageMin = ageMin;
     }
 
     public int getCriteriaId() {
