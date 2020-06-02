@@ -10,19 +10,7 @@ import java.text.SimpleDateFormat;
 
 import java.text.ParseException;
 
-import java.io.FileInputStream;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-//import org.apache.poi.xssf.usermobile.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import static java.lang.Integer.*;
-//.xc
 public class UserInterface {
     private Input input = new Input();
     private Mission mission = new Mission();
@@ -30,8 +18,11 @@ public class UserInterface {
     private Criteria criteria = new Criteria();
 
     public static void main(String[] args) {
+
         UserInterface ui = new UserInterface();
+        ui.readExcel();
         ui.start();
+
     }
 
     public UserInterface() {
@@ -498,10 +489,23 @@ public class UserInterface {
     }
 
     public void readExcel() {
-        File file = new File("~/Desktops/sample missionToMars data.xlsx");
+
         //BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
         //POIFSFileSystem p = new POIFSFileSystem(in);
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Book1.csv"));//换成你的文件名
+            reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String item[] = line.split("，");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
 
+                String last = item[item.length-1];//这就是你要的数据了
+                //int value = Integer.parseInt(last);//如果是数值，可以转化为数值
+                System.out.println(last);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void displayJob() {
