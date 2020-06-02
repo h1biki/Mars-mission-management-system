@@ -493,7 +493,7 @@ public class UserInterface {
         //BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
         //POIFSFileSystem p = new POIFSFileSystem(in);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("Book1.csv"));//换成你的文件名
+            BufferedReader reader = new BufferedReader(new FileReader("Book.csv"));//换成你的文件名
             reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
             String line = null;
             while((line=reader.readLine())!=null){
@@ -519,6 +519,5 @@ public class UserInterface {
     public void displayException(String string) {
 
     }
-
 
 }
