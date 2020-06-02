@@ -72,6 +72,8 @@ public class UserInterface {
                 case "2":
                     System.out.println("Good Bye!");
                     break;
+                default:
+                    System.out.println("Invalid Input!");
             }
 
             String action = "";
@@ -123,6 +125,9 @@ public class UserInterface {
             String key = (String) keys.next();
             if (option.equals(key)) {
                 mission.setShuttle(shuttleHashMap.get(key));
+            } else {
+                System.out.println("Please enter the correct name of the desired shuttle listed above!");
+                selectShuttle(shuttleHashMap);
             }
         }
     }
@@ -262,6 +267,8 @@ public class UserInterface {
                 String state = missionState(choice);
                 mission.setMissionStatus(state);
                 break;
+            default:
+                System.out.println("Invalid Input!");
         }
         return option;
     }
@@ -286,6 +293,8 @@ public class UserInterface {
             case "f":
                 state = "Mission completed";
                 break;
+            default:
+                System.out.println("Invalid Input!");
         }
         return state;
     }
