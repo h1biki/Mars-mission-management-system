@@ -519,5 +519,4 @@ public class UserInterface {
     public void displayException(String string) {
 
     }
-
 }
