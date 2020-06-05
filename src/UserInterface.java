@@ -73,7 +73,7 @@ public class UserInterface {
                     if (action.equals("1")) {
                         //editMission();
                     } else if (action.equals("2")) {
-                        //selectShuttle(shuttleHashMap);
+                        selectShuttle();
                         displayCriteria();
                     }
                 } else if (role.equals("Candidate")) {
@@ -82,40 +82,7 @@ public class UserInterface {
         } while (!option.equals("2"));
     }
 
-    private void selectShuttle(HashMap<String, Shuttle> shuttleHashMap) {
-        System.out.println("Available Shuttles");
-        System.out.println("============================================");
-        System.out.println("Shuttle1:");
-        System.out.println("Shuttle Name: " + shuttleHashMap.get("shuttle1").getShuttleName());
-        System.out.println("ID: " + shuttleHashMap.get("shuttle1").getShuttleId());
-        System.out.println("Cargo Capacity: " + shuttleHashMap.get("shuttle1").getCargoCapacity());
-        System.out.println("Fuel Capacity: " + shuttleHashMap.get("shuttle1").getFuelCapacity());
-        System.out.println("Manufacturing Year: " + shuttleHashMap.get("shuttle1").getManufacturingYear());
-        System.out.println("Passenger Capacity: " + shuttleHashMap.get("shuttle1").getPassengerCapacity());
-        System.out.println("Travel Speed: " + shuttleHashMap.get("shuttle1").getTravelSpeed());
-        System.out.println("============================================");
-        System.out.println("Shuttle2:");
-        System.out.println("Shuttle Name: " + shuttleHashMap.get("shuttle2").getShuttleName());
-        System.out.println("ID: " + shuttleHashMap.get("shuttle2").getShuttleId());
-        System.out.println("Cargo Capacity: " + shuttleHashMap.get("shuttle2").getCargoCapacity());
-        System.out.println("Fuel Capacity: " + shuttleHashMap.get("shuttle2").getFuelCapacity());
-        System.out.println("Manufacturing Year: " + shuttleHashMap.get("shuttle2").getManufacturingYear());
-        System.out.println("Passenger Capacity: " + shuttleHashMap.get("shuttle2").getPassengerCapacity());
-        System.out.println("Travel Speed: " + shuttleHashMap.get("shuttle2").getTravelSpeed());
-        System.out.println("============================================");
-        String option = input.acceptStringInput("Please input the desired shuttle name for mission:(Case sensitive)");
 
-        Iterator keys = shuttleHashMap.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            if (option.equals(key)) {
-                mission.setShuttle(shuttleHashMap.get(key));
-            } else {
-                System.out.println("Please enter the correct name of the desired shuttle listed above!");
-                selectShuttle(shuttleHashMap);
-            }
-        }
-    }
 
     /*private void editMission() {
         String option = "";
@@ -352,6 +319,22 @@ public class UserInterface {
                 } catch (IOException e) {
                     System.out.println("An error occurred");
                 }
+                try {
+                    File file = new File("../FIT5136_S1_2020_28/Mission.csv");
+                    if ( !file.exists());
+                    file.createNewFile();
+                    FileWriter f = new FileWriter(file,true);
+                    BufferedWriter writer = new BufferedWriter(f);
+                    //   writer.write("\n");
+                    writer.write(",,,,,,,");
+                    writer.write(min + "-" + max);
+                    System.out.print("Writing into excel");
+                    writer.newLine();
+                    writer.close();
+                    f.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         criteria.setAgeMax(Integer.parseInt(max));
@@ -531,6 +514,22 @@ public class UserInterface {
         }
 
         try {
+            BufferedReader reader = new BufferedReader(new FileReader("administrator.csv"));
+            reader.readLine();
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String administrator[] = line.split(",");
+                String id = administrator[0];
+                String pwd = administrator[2];
+                if ((userName.equals(id)) && (password.equals(pwd))){
+                    role = "Administrator";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             BufferedReader reader = new BufferedReader(new FileReader("candidates.csv"));
             reader.readLine();
             String line = null;
@@ -635,6 +634,27 @@ public class UserInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void selectShuttle() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Shuttle.csv"));
+            reader.readLine();
+            String line = null;
+            int num = 1;
+            System.out.println("HEADER: Shuttle Number, Name, Manufactured Year, Fuel Capacity (in litres), Passenger Capacity, Cargo Capacity (in kgs), Travel speed (kms/hr), Origin");
+            while((line=reader.readLine())!=null){
+                String item[] = line.split("，");
+                String last = item[item.length-1];
+                System.out.println("Shuttle " + num + ": " +last);
+                num++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Input input = new Input();
+        System.out.println("HEADER: Shuttle Number, Name, Manufactured Year, Fuel Capacity (in litres), Passenger Capacity, Cargo Capacity (in kgs), Travel speed (kms/hr), Origin");
+        int selectedShuttle = input.acceptIntegerInput("Please select a desired shuttle: ");
     }
 
     public void editMissionMenu(String[] mission){
