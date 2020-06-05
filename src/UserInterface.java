@@ -16,11 +16,14 @@ public class UserInterface {
     private Mission mission = new Mission();
     private Job job = new Job();
     private Criteria criteria = new Criteria();
+    private String coordinatorId = "";
 
     public static void main(String[] args) {
 
         UserInterface ui = new UserInterface();
-        ui.readExcel();
+        ui.readMissionExcel();
+        //ui.writeToFile();
+       // ui.readMissionExcel();
         ui.start();
 
     }
@@ -44,23 +47,10 @@ public class UserInterface {
             System.out.println("============================================");
             System.out.println("");
             option = input.acceptStringInput("Please Choose Your Option: ");
-            Administrator administratorTom = new Administrator("Tom", "pwd123", "Administrator", "tom@gmail.com", 1, "AdminTom");
-            MissionCoordinator missionCoordinatorJerry = new MissionCoordinator("Jerry", "pwd123", "MissionCoordinator", "jerry@gmail.com", 1, 1, "MCJerry", "jerry@gmail.com");
-            Shuttle shuttle1 = new Shuttle(1, "shuttle1", 1999, 1000.00, 5, 100.00, 3000.00);
-            Shuttle shuttle2 = new Shuttle(2, "shuttle2", 2000, 1500.00, 6, 150.00, 3000.00);
-
-            HashMap<String, Shuttle> shuttleHashMap = new HashMap<>();
-            shuttleHashMap.put("shuttle1", shuttle1);
-            shuttleHashMap.put("shuttle2", shuttle2);
-
-            HashMap<String, Person> personHashMap = new HashMap<>();
-            personHashMap.put("Tom", administratorTom);
-            personHashMap.put("Jerry", missionCoordinatorJerry);
-
 
             switch (option) {
                 case "1":
-                    role = displayLoginMenu(personHashMap);
+                    role = loginPart();
                     break;
                 case "2":
                     System.out.println("Good Bye!");
@@ -75,13 +65,15 @@ public class UserInterface {
                     action = displayMissionCoordinatorMenu();
                     if (action.equals("1")) {
                         createMission();
+                    } else if(action.equals("2")){
+                        editMission();
                     }
                 } else if (role.equals("Administrator")) {
                     action = displayAdministratorMenu();
                     if (action.equals("1")) {
-                        editMission();
+                        //editMission();
                     } else if (action.equals("2")) {
-                        selectShuttle(shuttleHashMap);
+                        //selectShuttle(shuttleHashMap);
                         displayCriteria();
                     }
                 } else if (role.equals("Candidate")) {
@@ -125,30 +117,14 @@ public class UserInterface {
         }
     }
 
-    private void editMission() {
+    /*private void editMission() {
         String option = "";
         do {
             option = displayCreateMissionMenu();
             option = displayCreateMission(option);
         } while (!option.equals("13"));
-    }
+    }*/
 
-    public String displayLoginMenu(HashMap<String, Person> hashMap) {
-        String role = "";
-        String userName = input.acceptStringInput("Please enter your username");
-        String password = input.acceptStringInput("Please enter your password");
-        if (userName.equals(hashMap.get("Tom").getUserName()) && password.equals(hashMap.get("Tom").getUserPassword())) {
-            if (hashMap.get("Tom").getUserPermission().equals("Administrator")) {
-                role = "Administrator";
-            } else if (hashMap.get("Tom").getUserPermission().equals("Candidate")) {
-                role = "Candidate";
-            } else {
-                role = "MissionCoordinator";
-            }
-        }
-        return role;
-
-    }
 
     public String displayMissionCoordinatorMenu() {
         String option = "";
@@ -158,6 +134,7 @@ public class UserInterface {
         System.out.println("*                                          *");
         System.out.println("* Please select from the following options *");
         System.out.println("*            Press 1 to Creat a Mission    *");
+        System.out.println("*            Press 2 to edit a Mission     *");
         System.out.println("*            Press e to exit               *");
         System.out.println("============================================");
         System.out.println("");
@@ -172,7 +149,7 @@ public class UserInterface {
         System.out.println("*                Create Mission Menu                   *");
         System.out.println("*                                                      *");
         System.out.println("* Please select from the following options to create   *");
-        System.out.println("* or edit mission                                      *");
+        System.out.println("* mission                                              *");
         System.out.println("*  1. Mission name                                     *");
         System.out.println("*  2. Mission description                              *");
         System.out.println("*  3. Country of region                                *");
@@ -192,79 +169,79 @@ public class UserInterface {
         return option;
     }
 
+    public void createMission(){
+        String[] mission = new String[23];
+        mission = MissionMenu(mission);
+        writeMissionToFile(mission);
+    }
 
-    public void createMission() {
+    //new
+    public String[] MissionMenu(String[] mission) {
         String option = "";
+        mission[0] = createMissionId();
         do {
             option = displayCreateMissionMenu();
-            option = displayCreateMission(option);
+            switch (option) {
+                case "1":
+                    String name = input.acceptStringInput("Please enter the mission name.");
+                    mission[1] = name;
+                    break;
+                case "2":
+                    String descrption = input.acceptStringInput("Please enter the mission description.");
+                    mission[8] = descrption;
+                    break;
+                case "3":
+                    String countryOfRegion = input.acceptStringInput("Please enter the country of region.");
+                    mission[3] = countryOfRegion;
+                    break;
+                case "4":
+                    String countriesAllowed = input.acceptStringInput("Please enter the countries allowed.");
+                    mission[4] = countriesAllowed;
+                    break;
+                case "5":
+                    String coordinateInformation = input.acceptStringInput("Please enter the coordinator's name and contact information.");
+                    mission[5] = coordinateInformation;
+                    break;
+                case "6":
+                    String jobName = input.acceptStringInput("Please enter the job name.");
+                    job.setJobName(jobName);
+                    String jobDescription = input.acceptStringInput("Please enter the job description.");
+                    job.setJobDescription(jobDescription);
+                    break;
+                case "7":
+                    String title = input.acceptStringInput("Please enter the employment requirements title.");
+                    mission[9] = title;
+                    String noOfEmp = input.acceptStringInput("Please enter the number of employees requirements for each job.");
+                    mission[10] = noOfEmp;
+                    break;
+                case "8":
+                    String cargoReqFor = input.acceptStringInput("Please enter the cargo requirements for.");
+                    mission[10] = cargoReqFor;
+                    break;
+                case "9":
+                    String LaunchDate = input.acceptStringInput("Please enter the launch date.");
+                    mission[2] = LaunchDate;
+                    break;
+                case "10":
+                    String desLocation = input.acceptStringInput("Please enter the Location of the destination.");
+                    mission[21] = desLocation;
+                    break;
+                case "11":
+                    String missionDuration = input.acceptStringInput("Please enter the Duration of the mission.");
+                    mission[7] = missionDuration;
+                    break;
+                case "12":
+                    String choice = input.acceptStringInput("Please select the state of the mission.\n\na.Planning phase \nb.Departed Earth\nc.Landed on Mars\nd.Mission in progress\ne. Returned to Earth\nf. Mission completed");
+                    String state = missionState(choice);
+                    mission[22] = state;
+                    break;
+                default:
+                    System.out.println("Invalid Input!");
+            }
         } while (!option.equals("13"));
+        return mission;
     }
 
-    public String displayCreateMission(String option) {
-        switch (option) {
-            case "1":
-                String name = input.acceptStringInput("Please enter the mission name.");
-                mission.setMissionName(name);
-                break;
-            case "2":
-                String descrption = input.acceptStringInput("Please enter the mission description.");
-                mission.setMissionDescription(descrption);
-                break;
-            case "3":
-                String countryOfRegion = input.acceptStringInput("Please enter the country of region.");
-                mission.setCountryOfOrigin(countryOfRegion);
-                break;
-            case "4":
-                String countriesAllowed = input.acceptStringInput("Please enter the countries allowed.");
-                mission.setCountryAllowed(countriesAllowed);
-                break;
-            case "5":
-                String coordinateInformation = input.acceptStringInput("Please enter the coordinator's name and contact information.");
-                mission.setCoordinateInformation(coordinateInformation);
-                break;
-            case "6":
-                String jobName = input.acceptStringInput("Please enter the job name.");
-                job.setJobName(jobName);
-                String jobDescription = input.acceptStringInput("Please enter the job description.");
-                job.setJobDescription(jobDescription);
-                break;
-            case "7":
-                String title = input.acceptStringInput("Please enter the employment requirements title.");
-                mission.setEmploymentRequirement(title);
-                int noOfEmp = input.acceptIntegerInput("Please enter the number of employees requirements for each job.");
-                mission.setNumberOfEmploymentRequirement(noOfEmp);
-                break;
-            case "8":
-                String cargoReqForJourney = input.acceptStringInput("Please enter the cargo requirements for the journey.");
-                mission.setCargoRequirementForJourney(cargoReqForJourney);
-                String cargoReqForMission = input.acceptStringInput("Please enter the cargo requirements for the mission.");
-                mission.setCargoRequirementForMission(cargoReqForMission);
-                String cargoReqForOtherMission = input.acceptStringInput("Please enter the cargo requirements for other mission.");
-                mission.setCargoRequirementForOtherMission(cargoReqForOtherMission);
-                break;
-            case "9":
-                String LaunchDate = input.acceptStringInput("Please enter the launch date.");
-                mission.setLaunchDate(LaunchDate);
-                break;
-            case "10":
-                String desLocation = input.acceptStringInput("Please enter the Location of the destination.");
-                mission.setDestinationLocation(desLocation);
-                break;
-            case "11":
-                int missionDuration = input.acceptIntegerInput("Please enter the Duration of the mission.");
-                mission.setMissionDuration(missionDuration);
-                break;
-            case "12":
-                String choice = input.acceptStringInput("Please select the state of the mission.\n\na.Planning phase \nb.Departed Earth\nc.Landed on Mars\nd.Mission in progress\ne. Returned to Earth\nf. Mission completed");
-                String state = missionState(choice);
-                mission.setMissionStatus(state);
-                break;
-            default:
-                System.out.println("Invalid Input!");
-        }
-        return option;
-    }
 
     public String missionState(String option) {
         String state = "Planning phase";
@@ -488,24 +465,180 @@ public class UserInterface {
         return date;
     }
 
-    public void readExcel() {
+    public void readMissionExcel() {
 
         //BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
         //POIFSFileSystem p = new POIFSFileSystem(in);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("Book.csv"));//换成你的文件名
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));//换成你的文件名
             reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
             String line = null;
             while((line=reader.readLine())!=null){
-                String item[] = line.split("，");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
-
-                String last = item[item.length-1];//这就是你要的数据了
-                //int value = Integer.parseInt(last);//如果是数值，可以转化为数值
+                String item[] = line.split("，");
+                String last = item[item.length-1];
                 System.out.println(last);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //new
+    public void writeMissionToFile(String[] mission){
+        try {
+            File file = new File( "../FIT5136_S1_2020_28/mission.csv");
+
+            FileWriter fw = new FileWriter(file, true);
+            BufferedWriter writer = new BufferedWriter(fw);
+            if ( !file.exists() )
+                file.createNewFile();
+            if(!mission[0].equals("7303")) {
+                writer.write("\n");
+            }
+            for (int i = 0; i < mission.length; i++) {
+                String missionData = "\"" + mission[i] + "\"";
+                writer.write(missionData);
+                writer.write(",");
+            }
+            writer.close();
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("writing into excel success");
+    }
+
+
+    public String loginPart() {
+        String role = "";
+        String userName = input.acceptStringInput("Please enter your id");
+        String password = input.acceptStringInput("Please enter your password");
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("missionCoordinators.csv"));
+            reader.readLine();
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String coordinator[] = line.split(",");
+                String id = coordinator[0];
+                String pwd = coordinator[2];
+                if ((userName.equals(id)) && (password.equals(pwd))){
+                    role = "MissionCoordinator";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("candidates.csv"));
+            reader.readLine();
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String candidates[] = line.split(",");
+                String id = candidates[0];
+                String pwd = candidates[1];
+                if ((userName.equals(id)) && (password.equals(pwd))){
+                    role = "candidates";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(role.equals("")){
+            System.out.println("userName or password wrong");
+            start();
+        }
+        return role;
+    }
+
+    public String createMissionId(){
+        String missionid = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
+            reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String mission[] = line.split(",");
+                missionid = mission[0];
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(missionid.length()>4) {
+            missionid = missionid.substring(1, 5);
+        }
+        int temp = Integer.parseInt(missionid) + 3;
+        missionid = Integer.toString(temp);
+        return  missionid;
+    }
+
+    /*public void readMissionExcel() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
+            reader.readLine();
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String last = mission[mission.length-1];
+                System.out.println(last);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public void editMission(){
+        ArrayList<String[]> alldata = new ArrayList<String[]>();
+        readMissionExcel();
+        String missiionId = input.acceptStringInput("Please enter mission id to choose which mission you want to edit.");
+
+        String a = String.valueOf((char)34);
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
+            reader.readLine();
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                /*for(int i = 0; i < mission.length; i++){
+                    mission[i] = mission[i].replace(a,"");
+                }*/
+                if(missiionId == mission[0]){
+                    mission = MissionMenu(mission);
+                }
+                alldata.add(mission);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            File file = new File( "../FIT5136_S1_2020_28/mission.csv");
+
+            FileWriter fw = new FileWriter(file, false);
+            BufferedWriter writer = new BufferedWriter(fw);
+            if ( !file.exists() )
+                file.createNewFile();
+            for(int i = 0 ; i < alldata.size(); i++){
+                String[] tempMission = alldata.get(i);
+                for(int j = 0; j < tempMission.length; j++){
+                    String missionData = "\"" + tempMission[j] + "\"";
+                    writer.write(missionData);
+                    writer.write(",");
+                }
+                writer.write("\n");
+            }
+            writer.close();
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editMissionMenu(String[] mission){
+
     }
 
     public void displayJob() {
