@@ -102,7 +102,7 @@ public class UserInterface {
         String option = "";
         System.out.println("");
         System.out.println("========================================================");
-        System.out.println("*                Create Mission Menu                   *");
+        System.out.println("*                     Mission Menu                     *");
         System.out.println("*                                                      *");
         System.out.println("* Please select from the following options to create   *");
         System.out.println("* mission                                              *");
