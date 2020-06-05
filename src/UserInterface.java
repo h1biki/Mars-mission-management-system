@@ -21,9 +21,6 @@ public class UserInterface {
     public static void main(String[] args) {
 
         UserInterface ui = new UserInterface();
-        ui.readMissionExcel();
-        //ui.writeToFile();
-       // ui.readMissionExcel();
         ui.start();
 
     }
@@ -57,6 +54,7 @@ public class UserInterface {
                     break;
                 default:
                     System.out.println("Invalid Input!");
+                    start();
             }
 
             String action = "";
@@ -83,17 +81,6 @@ public class UserInterface {
             } while (!action.equals("e"));
         } while (!option.equals("2"));
     }
-
-
-
-    /*private void editMission() {
-        String option = "";
-        do {
-            option = displayCreateMissionMenu();
-            option = displayCreateMission(option);
-        } while (!option.equals("13"));
-    }*/
-
 
     public String displayMissionCoordinatorMenu() {
         String option = "";
@@ -203,6 +190,9 @@ public class UserInterface {
                     String choice = input.acceptStringInput("Please select the state of the mission.\n\na.Planning phase \nb.Departed Earth\nc.Landed on Mars\nd.Mission in progress\ne. Returned to Earth\nf. Mission completed");
                     String state = missionState(choice);
                     mission[22] = state;
+                    break;
+                case "13":
+                    System.out.println("Back is selected.");
                     break;
                 default:
                     System.out.println("Invalid Input!");
@@ -329,8 +319,19 @@ public class UserInterface {
                     FileWriter f = new FileWriter(file,true);
                     BufferedWriter writer = new BufferedWriter(f);
                     //   writer.write("\n");
-                    writer.write(",,,,,,,");
-                    writer.write(min + "-" + max);
+                    String[] temp = new String[23];
+                    for(int i = 0; i < temp.length;i++){
+                        temp[i] = "null";
+                        if(i==11){
+                            temp[i] = min + "-" + max;
+                        }
+                    }
+                    for(int i = 0; i < 23; i++){
+                        writer.write(temp[i]);
+                        writer.write(",");
+                    }
+                    //writer.write(",,,,,,,,,,,");
+                    //writer.write(min + "-" + max);
                     System.out.print("Writing into excel");
                     writer.newLine();
                     writer.close();
@@ -351,13 +352,14 @@ public class UserInterface {
     }
 
     public void displayNBestCandidates(){
-        System.out.println("these are the candidates you want: ");
         int criteriaAge = 18;
         String criteriaWorkExp = "";
         String criteriaQualification = "";
         String criteriaOccupation = "general practitioner";
         String criteriaCSkill = "advanced";
         String criteriaLanguage = "malay";
+        System.out.println("The criterias are : age 18, no work experience, no qualification, occupation: general practitioner, computer skill: advanced, language: malay");
+        System.out.println("these are the candidates you want: ");
         try {
             BufferedReader reader = new BufferedReader(new FileReader("candidates.csv"));
             reader.readLine();
@@ -445,11 +447,9 @@ public class UserInterface {
 
     public void readMissionExcel() {
 
-        //BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-        //POIFSFileSystem p = new POIFSFileSystem(in);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));//换成你的文件名
-            reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
+            reader.readLine();
             String line = null;
             while((line=reader.readLine())!=null){
                 String item[] = line.split("，");
@@ -461,7 +461,6 @@ public class UserInterface {
         }
     }
 
-    //new
     public void writeMissionToFile(String[] mission){
         try {
             File file = new File( "../FIT5136_S1_2020_28/mission.csv");
@@ -551,7 +550,7 @@ public class UserInterface {
         String missionid = "";
         try {
             BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
-            reader.readLine();//第一行信息，为标题信息，不用，如果需要，注释掉
+            reader.readLine();
             String line = null;
             while((line=reader.readLine())!=null){
                 String mission[] = line.split(",");
@@ -568,30 +567,15 @@ public class UserInterface {
         return  missionid;
     }
 
-    /*public void readMissionExcel() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
-            reader.readLine();
-            String line = null;
-            while((line=reader.readLine())!=null){
-                String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-                String last = mission[mission.length-1];
-                System.out.println(last);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public void editMission(){
         ArrayList<String[]> alldata = new ArrayList<String[]>();
         readMissionExcel();
         String missiionId = input.acceptStringInput("Please enter mission id to choose which mission you want to edit.");
-
         String a = String.valueOf((char)34);
         try {
             BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
-            //reader.readLine();
+
             String line = null;
             while((line=reader.readLine())!=null){
                 String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
@@ -636,35 +620,66 @@ public class UserInterface {
             BufferedReader reader = new BufferedReader(new FileReader("Shuttle.csv"));
             reader.readLine();
             String line = null;
-            int num = 1;
             System.out.println("HEADER: Shuttle Number, Name, Manufactured Year, Fuel Capacity (in litres), Passenger Capacity, Cargo Capacity (in kgs), Travel speed (kms/hr), Origin");
             while((line=reader.readLine())!=null){
                 String item[] = line.split("，");
                 String last = item[item.length-1];
-                System.out.println("Shuttle " + num + ": " +last);
-                num++;
+                System.out.println("Shuttle" + ": " +last);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Input input = new Input();
         System.out.println("HEADER: Shuttle Number, Name, Manufactured Year, Fuel Capacity (in litres), Passenger Capacity, Cargo Capacity (in kgs), Travel speed (kms/hr), Origin");
-        int selectedShuttle = input.acceptIntegerInput("Please select a desired shuttle: ");
+        addShuttle();
     }
 
-    public void editMissionMenu(String[] mission){
+    public void addShuttle(){
+        ArrayList<String[]> alldata = new ArrayList<String[]>();
+        readMissionExcel();
+        String missionId = input.acceptStringInput("Please enter mission id to choose which mission you want to add.");
+        String shuttleId = input.acceptStringInput("Please enter shuttle id.");
+        String a = String.valueOf((char)34);
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
 
+            String line = null;
+            while((line=reader.readLine())!=null){
+                String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                for(int i = 0; i < mission.length; i++){
+                    mission[i] = mission[i].replace(a,"");
+                }
+                alldata.add(mission);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            File file = new File( "../FIT5136_S1_2020_28/mission.csv");
+
+            FileWriter fw = new FileWriter(file, false);
+            BufferedWriter writer = new BufferedWriter(fw);
+            if ( !file.exists() )
+                file.createNewFile();
+            for(int i = 0 ; i < alldata.size(); i++){
+                String[] tempMission = alldata.get(i);
+                for(int j = 0; j < tempMission.length; j++){
+                    String missionData = "\"" + tempMission[j] + "\"";
+                    writer.write(missionData);
+                    writer.write(",");
+                }
+                if(missionId.equals(tempMission[0])){
+                    writer.write(shuttleId);
+                    writer.write(",");
+                }
+                writer.write("\n");
+            }
+            writer.close();
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void displayJob() {
-
-    }
-
-    public void displayMission() {
-
-    }
-
-    public void displayException(String string) {
-
-    }
 }
