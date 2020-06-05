@@ -71,10 +71,12 @@ public class UserInterface {
                 } else if (role.equals("Administrator")) {
                     action = displayAdministratorMenu();
                     if (action.equals("1")) {
-                        //editMission();
+                        editMission();
                     } else if (action.equals("2")) {
                         selectShuttle();
                         displayCriteria();
+                    }else if (action.equals("3")) {
+                        displayNBestCandidates();
                     }
                 } else if (role.equals("Candidate")) {
                 }
@@ -139,13 +141,13 @@ public class UserInterface {
     public void createMission(){
         String[] mission = new String[23];
         mission = MissionMenu(mission);
+        mission[0] = createMissionId();
         writeMissionToFile(mission);
     }
 
     //new
     public String[] MissionMenu(String[] mission) {
         String option = "";
-        mission[0] = createMissionId();
         do {
             option = displayCreateMissionMenu();
             switch (option) {
@@ -239,14 +241,15 @@ public class UserInterface {
     public String displayAdministratorMenu() {
         String option = "";
         System.out.println("");
-        System.out.println("============================================");
-        System.out.println("*            Administrator Menu            *");
-        System.out.println("*                                          *");
-        System.out.println("* Please select from the following options *");
-        System.out.println("*         Press 1 to Edit a Mission        *");
-        System.out.println("*         Press 2 to Select Shuttle        *");
-        System.out.println("*            Press e to exit               *");
-        System.out.println("============================================");
+        System.out.println("==================================================");
+        System.out.println("*            Administrator Menu                  *");
+        System.out.println("*                                                *");
+        System.out.println("* Please select from the following options       *");
+        System.out.println("*         Press 1 to Edit a Mission              *");
+        System.out.println("*         Press 2 to Select Shuttle              *");
+        System.out.println("*         Press 3 to Display Best N candidates   *");
+        System.out.println("*            Press e to exit                     *");
+        System.out.println("==================================================");
         System.out.println("");
         option = input.acceptStringInput("Please Choose Your Option: ");
         return option;
@@ -347,75 +350,67 @@ public class UserInterface {
 
     }
 
-
-    public void displayNBestCandidates() {
-        Input input = new Input();
-        String candiNo = "";
-        boolean flag = true;
-        while (flag) {
-            candiNo = input.acceptStringInput("please input the number of candidates you want:");
-            candiNo = candiNo.replaceAll("[0-9]", "");
-            if (candiNo.length() != 0) {
-                System.out.println("the input value is not an integer");
-            } else {
-                flag = false;
+    public void displayNBestCandidates(){
+        System.out.println("these are the candidates you want: ");
+        int criteriaAge = 16;
+        String criteriaWorkExp = "";
+        String criteriaQualification = "";
+        String criteriaOccupation = "general practitioner";
+        String criteriaCSkill = "advanced";
+        String criteriaLanguage = "javanese";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("candidates.csv"));
+            reader.readLine();
+            String line = null;
+            String yinhao = String.valueOf((char)34);
+            while((line=reader.readLine())!=null){
+                String item[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String[] cells = new String[item.length];
+                for(int x = 0; x < cells.length; x++){
+                    cells[x] = item[x].replace(yinhao,"");
+                }
+                int yearOfBirth = Integer.parseInt(cells[2].trim().substring(6));
+                Calendar calendar = Calendar.getInstance();
+                int currentYear = calendar.get(Calendar.YEAR);
+                int age = currentYear - yearOfBirth;
+                String workExpCell[] = cells[13].split(",");
+                String qual[] = cells[12].split(",");
+                String occu[] = cells[14].split(",");
+                String cskill = cells[15];
+                cskill = cskill.trim();
+                String language[] = cells[cells.length-1].split(",");
+                if(age == criteriaAge){
+                    for(String i0 : workExpCell){
+                        String s0 = i0.trim();
+                        s0 = s0.replace("yr", "");
+                        if(criteriaWorkExp.equals(s0)){
+                            for(String i1 : qual){
+                                String s1 = i1.trim();
+                                if(s1.equals(criteriaQualification)){
+                                    for(String i2 : occu){
+                                        String s2 = i2.trim();
+                                        if(s2.equals(criteriaOccupation)){
+                                            if(cskill.equals(criteriaCSkill)){
+                                                for(String i3 : language){
+                                                    String s3 = i3.trim();
+                                                    if(s3.equals(criteriaLanguage)){
+                                                        for(int i4 = 0; i4 < cells.length; i4 ++){
+                                                            System.out.print(cells[i4] + " ");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String candiCriminalRecord = "";
-        while (!flag) {
-            candiCriminalRecord = input.acceptStringInput("please input the criminal record:");
-            if (criteria.getCriminalRecord().equals(candiCriminalRecord)) {
-                flag = true;
-            } else {
-                System.out.println("the criminal record does not exist ");
-            }
-        }
-        String candiHealthRecord = "";
-        while (flag) {
-            candiHealthRecord = input.acceptStringInput("please input the health record:");
-            if (criteria.getHealthRecord().equals(candiHealthRecord)) {
-                flag = false;
-            } else {
-                System.out.println("the health record does not exist ");
-            }
-        }
-
-        String candiDob = "";
-        int age = -1;
-        while (!flag) {
-            candiDob = input.acceptStringInput("please input the date of birth in format of 'yyyy-mm-dd'");
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = null;
-            try {
-                date = format.parse(candiDob);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                System.out.println("Your input should be in format of yyyy-mm-dd");
-            }
-            if(date != null) {
-                date = java.sql.Date.valueOf(candiDob);
-                flag = true;
-            }
-            Date currentDate = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            int yearOfBirth = c.get(Calendar.YEAR);
-            Calendar c1 = Calendar.getInstance();
-            c.setTime(currentDate);
-            int currentYear = c1.get(Calendar.YEAR);
-            age = currentYear - yearOfBirth;
-            if(age >= criteria.getAgeMin() && age <= criteria.getAgeMax()){
-                flag = true;
-            }
-            else{
-                System.out.println("the age does not exist");
-            }
-        }
-        for (int i = 0; i < Integer.parseInt(candiNo); i++) {
-            System.out.println("Here are the candidates you want:");
-            System.out.println("");
-        }
-
     }
 
     public String dateToString(Date date, String type) {
@@ -596,14 +591,14 @@ public class UserInterface {
         String a = String.valueOf((char)34);
         try {
             BufferedReader reader = new BufferedReader(new FileReader("mission.csv"));
-            reader.readLine();
+            //reader.readLine();
             String line = null;
             while((line=reader.readLine())!=null){
                 String mission[] = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-                /*for(int i = 0; i < mission.length; i++){
+                for(int i = 0; i < mission.length; i++){
                     mission[i] = mission[i].replace(a,"");
-                }*/
-                if(missiionId == mission[0]){
+                }
+                if(missiionId.equals(mission[0])){
                     mission = MissionMenu(mission);
                 }
                 alldata.add(mission);
