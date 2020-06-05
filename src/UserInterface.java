@@ -352,12 +352,12 @@ public class UserInterface {
 
     public void displayNBestCandidates(){
         System.out.println("these are the candidates you want: ");
-        int criteriaAge = 16;
+        int criteriaAge = 18;
         String criteriaWorkExp = "";
         String criteriaQualification = "";
         String criteriaOccupation = "general practitioner";
         String criteriaCSkill = "advanced";
-        String criteriaLanguage = "javanese";
+        String criteriaLanguage = "malay";
         try {
             BufferedReader reader = new BufferedReader(new FileReader("candidates.csv"));
             reader.readLine();
