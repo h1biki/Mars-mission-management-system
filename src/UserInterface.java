@@ -31,7 +31,6 @@ public class UserInterface {
     public void start() {
         Input input = new Input();
         String option = "";//select option from the main menu
-        String role = "";
 
         do {//main loop
             System.out.println("");
@@ -45,6 +44,7 @@ public class UserInterface {
             System.out.println("");
             option = input.acceptStringInput("Please Choose Your Option: ");
 
+            String role = "";
             switch (option) {
                 case "1":
                     role = loginPart();
@@ -118,7 +118,7 @@ public class UserInterface {
         System.out.println("*  10. Location of the destination                     *");
         System.out.println("*  11. Duration of the mission                         *");
         System.out.println("*  12. Status of the mission                           *");
-        System.out.println("*  13. Back to the Mission Coordinator Menu            *");
+        System.out.println("*  13. Back                                            *");
         System.out.println("========================================================");
         System.out.println("");
         option = input.acceptStringInput("Select from the options: ");
@@ -246,9 +246,6 @@ public class UserInterface {
 
     }
 
-    public void displayShuttle() {
-
-    }
 
     public void displayCriteria() {
         System.out.println("============================================");
