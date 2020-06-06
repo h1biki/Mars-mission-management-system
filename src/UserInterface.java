@@ -466,14 +466,12 @@ public class UserInterface {
             BufferedWriter writer = new BufferedWriter(fw);
             if ( !file.exists() )
                 file.createNewFile();
-            if(!mission[0].equals("7303")) {
-                writer.write("\n");
-            }
             for (int i = 0; i < mission.length; i++) {
                 String missionData = "\"" + mission[i] + "\"";
                 writer.write(missionData);
                 writer.write(",");
             }
+            writer.write("\n");
             writer.close();
             fw.close();
         } catch (Exception e) {
@@ -651,7 +649,6 @@ public class UserInterface {
             e.printStackTrace();
         }
 
-        //a
         try {
             File file = new File( "../FIT5136_S1_2020_28/mission.csv");
 
