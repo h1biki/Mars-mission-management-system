@@ -1,4 +1,4 @@
-# Text-based application(Java) of Mars-mission-management-system
+# Mars-mission-management-system(Text-based Java application)
 
 ## Feature 1: Creating a mission
 ## Feature 2: Selecting a space shuttle
